@@ -35,24 +35,24 @@ addr = pyrtl.Output(bitwidth=26, name='addr')  # for J-type instruct
 # find opcode first to determine which type of instruction
 
 instrType = pyrtl.WireVector(bitwidth=6, name='instrType')
-instrType <<= data
+instrType <<= data[:6]
 op <<= instrType
 
 with pyrtl.conditional_assignment:
     with instrType == 0:  # R-Type
-        rs |= data
-        rt |= data
-        rd |= data
-        sh |= data
-        func |= data
+        rs |= data[6:11]
+        rt |= data[11:16]
+        rd |= data[16:21]
+        sh |= data[21:26]
+        func |= data[26:]
     with instrType == 2:  # J-type
-        addr |= data
+        addr |= data[6:]
     with instrType == 3:  # also a J-type
-        addr |= data
+        addr |= data[6:]
     with pyrtl.otherwise:  # I-type
-        rs |= data
-        rt |= data
-        imm |= data
+        rs |= data[6:11]
+        rt |= data[11:16]
+        imm |= data[16:]
 
 
 # simulate

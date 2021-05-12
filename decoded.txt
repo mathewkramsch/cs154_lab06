@@ -1,6 +1,51 @@
 # decoded.txt - part 1 (c)
-# translation of instr_dec.py PyRTL machine code -> MIPS assembly
+
+#######################################################################################
+### Translated Instructions to MIPS:
+#######################################################################################
+
+jal 0x0000000
+beq $s1, $t0, 0x0002
+add $a0, $v0, $zero
+lw $t1, 0x4($t0)
+
+#######################################################################################
+## Work of translating instructions:
+#######################################################################################
+
 # translate the following instructions from decimal to MIPS assembly
-# sample_instructions = [201326592, 286326786, 4202528, 2366177284]
+# sample_instructions = [201326592, 286326786, 4202528, 2366177284] in decimal
+# sample_instructions = [0x0c000000, 0x11110002, 0x00402020, 0x8d090004] in hex
 
+# R-type: op(6), rs(5), rt(5), rd(5), shamt(5), funct(6)
+# J-type: op(6), addr(26)
+# I-type: op(6), rs(5), rt(5), immed(16)
 
+0x0c000000
+0000 1100 0000 0000 0000 0000 0000 0000
+op = 000011 = 0x03 = jal, so J-type
+000011 0...0
+addr = 0...0 -> these 26 bits represent 32-bit address where label of jump is 
+-> jal 0x0000000
+
+0x11110002
+0001 0001 0001 0001 0000 0000 0000 0010
+op = 00 0100 = 0x04 = beq, so I-type
+000100 01000 10001 0000000000000010
+beq, 0x08=8=$t0, 0x11=17=$s1, 0x0002
+-> beq $s1, $t0, 0x0002
+
+0x00402020
+0000 0000 0100 0000 0010 0000 0010 0000
+op = 0x00, so R-Type
+000000 00010 00000 00100 00000 100000
+0, 0x02=2=$v0, 0=$zero, 0x04=4=$a0, 0=$zero, 0x20
+op/funct = 0/20_hex = add
+-> add $a0, $v0, $zero
+
+0x8D090004
+1000 1101 0000 1001 0000 0000 0000 0100
+op=10 0011=0x23=lw, so I-type
+100011 01000 01001 0000 0000 0000 0100
+lw, 0x08=8=$t0, 0x09=9=$t1, 0x0004=4
+-> lw $t1, 0x4($t0)

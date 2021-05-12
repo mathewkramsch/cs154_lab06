@@ -34,14 +34,14 @@ addr = pyrtl.Output(bitwidth=26, name='addr')  # for J-type instruct
 # J-Type: op(6), addr(26)
 # find opcode first to determine which type of instruction
 
-op <<= data[:6]
-rs <<= data[6:11]
-rt <<= data[11:16]
-rd <<= data[16:21]
-sh <<= data[21:26]
-func <<= data[26:]
-addr <<= data[6:]
-imm <<= data[16:]
+func <<= data[:6]
+sh <<= data[6:11]
+rd <<= data[11:16]
+rt <<= data[16:21]
+rs <<= data[21:26]
+op <<= data[26:]
+addr <<= data[:26]
+imm <<= data[:16]
 
 
 # simulate

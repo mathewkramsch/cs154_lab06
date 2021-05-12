@@ -1,0 +1,6 @@
+# decoded.txt - part 1 (c)
+# translation of instr_dec.py PyRTL machine code -> MIPS assembly
+# translate the following instructions from decimal to MIPS assembly
+# sample_instructions = [201326592, 286326786, 4202528, 2366177284]
+
+

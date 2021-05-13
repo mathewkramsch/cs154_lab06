@@ -1,53 +1,8 @@
 # lab06.py
-
 # build part of the datapath of a single-cycle 32 bit MIPS processor (non-pipelined)
-# ALU instructs: ADD, SUB, AND, OR, XOR, SLL, SRL, SRA, and SLT (R-Type)
-# Register file: 32 rigisters, use PyRTL MemBlock to implement
-    # name it rf
-    # make it ascessible from the class level
-# Input: instruction fed through, named instr
-
-# instr -> Decoder -> rf -> ALU
 
 import pyrtl
 
-# instruction input
-instr = pyrtl.Input(bitwidth=32, name='instr')
-
-# decoder (only R-type)
-rs = pyrtl.WireVector(bitwidth=5, name='rs')
-rt = pyrtl.WireVector(bitwidth=5, name='rt')
-rd = pyrtl.WireVector(bitwidth=5, name='rd')
-sh = pyrtl.WireVector(bitwidth=5, name='sh')
-funct = pyrtl.WireVector(bitwidth=6, name='func')
-
-funct <<= instr[:6]
-sh <<= instr[6:11]
-rd <<= instr[11:16]
-rt <<= instr[16:21]
-rs <<= instr[21:26]
-
-# register file
-rf = pyrtl.MemBlock(32, addrwidth=32, name='rf', max_read_ports=2, max_write_ports=4, asynchronous=False, block=None)
-
-# rf outputs
-data0 = pyrtl.WireVector(32, 'data01')
-data1 = pyrtl.WireVector(32, 'data02')
-
-# make alu
-alu_out = pyrtl.WireVector(32, 'alu_out')
-
-# wire input ports to rf
-#rf[rs] <<= rs
-#rf[rt] <<= rt
-#rf[rd] <<= rd
-#rf[
-
-# wire write output ports from rf
-data0 <<= rf[rs]
-data1 <<= rf[rt]
-
-# ALU
 def alu (a, b, sh, funct):
     """
         Implementation of R-Type operation ALU:
@@ -89,9 +44,34 @@ def alu (a, b, sh, funct):
 
     return alu_output
 
-# Call the above-defined "alu" function and connect its results to the block's output ports 
-alu_out <<= alu(data0, data1, sh, funct)
-rf[rd] <<= alu_out
+
+# instruction input
+instr = pyrtl.Input(bitwidth=32, name='instr')
+
+# decode instruction (only R-type)
+rs = pyrtl.WireVector(bitwidth=5, name='rs')
+rt = pyrtl.WireVector(bitwidth=5, name='rt')
+rd = pyrtl.WireVector(bitwidth=5, name='rd')
+sh = pyrtl.WireVector(bitwidth=5, name='sh')
+funct = pyrtl.WireVector(bitwidth=6, name='func')
+funct <<= instr[:6]
+sh <<= instr[6:11]
+rd <<= instr[11:16]
+rt <<= instr[16:21]
+rs <<= instr[21:26]
+
+# register file
+rf = pyrtl.MemBlock(32, addrwidth=32, name='rf', max_read_ports=2, max_write_ports=4, asynchronous=False, block=None)
+data0 = pyrtl.WireVector(32, 'data01')  # rf outputs
+data1 = pyrtl.WireVector(32, 'data02')
+
+
+# wire input/output ports from rf
+data0 <<= rf[rs]  # data0 = the value of rs register in rf
+data1 <<= rf[rt]
+alu_out = pyrtl.WireVector(32, 'alu_out')  # for alu output
+alu_out <<= alu(data0, data1, sh, funct)  # connect alu function results to alu output wire
+rf[rd] <<= alu_out  # value of rd destination register = alu output
 
 # simulate processor
 sim_trace = pyrtl.SimulationTrace()

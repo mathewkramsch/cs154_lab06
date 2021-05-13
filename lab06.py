@@ -30,28 +30,18 @@ rs <<= instr[21:26]
 # register file
 rf = pyrtl.MemBlock(32, addrwidth=32, name='rf', max_read_ports=2, max_write_ports=4, asynchronous=False, block=None)
 
-# rf inputs
-#r_reg0 = pyrtl.WireVector(5, 'r_reg0')  # read source register name
-#r_reg1 = pyrtl.WireVector(5, 'r_reg1')  # read target register name
-#w_reg = pyrtl.WireVector(32, 'w_reg')  # write to register
-#w_data = pyrtl.WireVector(5, 'w_data')  # write data
-
 # rf outputs
 data0 = pyrtl.WireVector(32, 'data01')
 data1 = pyrtl.WireVector(32, 'data02')
-
-# wire inputs from decoder
-#r_reg0 <<= rs
-#r_reg1 <<= rt
-#w_reg <<= rd
 
 # make alu
 alu_out = pyrtl.WireVector(32, 'alu_out')
 
 # wire input ports to rf
-rf[rs] <<= rs
-rf[rt] <<= rt
-rf[rd] <<= rd
+#rf[rs] <<= rs
+#rf[rt] <<= rt
+#rf[rd] <<= rd
+#rf[
 
 # wire write output ports from rf
 data0 <<= rf[rs]
@@ -108,7 +98,3 @@ sim_trace = pyrtl.SimulationTrace()
 sim = pyrtl.Simulation(tracer=sim_trace)
 sim.step({ 'instr' : 0x014B4820 }) 
 sim_trace.render_trace()
-
-""" TODO: 
-- implement alu shift operations
-"""

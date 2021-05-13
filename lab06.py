@@ -17,8 +17,8 @@ def alu (rs, rt, sh, funct):
     XOR = rs ^ rt
     SLL = pyrtl.shift_left_logical(rt,sh) # shifts use rt, sh = shift amnt
     SRL = pyrtl.shift_right_logical(rt,sh)
-    SLT = pyrtl.shift_left_arithmetic(rt,sh)
     SRA = pyrtl.shift_right_arithmetic(rt,sh)
+    SLT = pyrtl.signed_lt(rs,rt)  # set less than (rd = rs<rt? 1:0)
 
     alu_output = pyrtl.WireVector(32)  # output
     

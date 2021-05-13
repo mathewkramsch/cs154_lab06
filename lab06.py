@@ -31,28 +31,27 @@ rs <<= instr[21:26]
 rf = pyrtl.MemBlock(32, addrwidth=32, name='rf', max_read_ports=2, max_write_ports=4, asynchronous=False, block=None)
 
 # rf inputs
-r_reg0 = pyrtl.WireVector(5, 'r_reg0')  # read source register name
-r_reg1 = pyrtl.WireVector(5, 'r_reg1')  # read target register name
-w_reg = pyrtl.WireVector(32, 'w_reg')  # write to register
-w_data = pyrtl.WireVector(5, 'w_data')  # write data
+#r_reg0 = pyrtl.WireVector(5, 'r_reg0')  # read source register name
+#r_reg1 = pyrtl.WireVector(5, 'r_reg1')  # read target register name
+#w_reg = pyrtl.WireVector(32, 'w_reg')  # write to register
+#w_data = pyrtl.WireVector(5, 'w_data')  # write data
 
 # rf outputs
 data0 = pyrtl.WireVector(32, 'data01')
 data1 = pyrtl.WireVector(32, 'data02')
 
 # wire inputs from decoder
-r_reg0 <<= rs
-r_reg1 <<= rt
-w_reg <<= rd
+#r_reg0 <<= rs
+#r_reg1 <<= rt
+#w_reg <<= rd
 
 # make alu
 alu_out = pyrtl.WireVector(32, 'alu_out')
 
 # wire input ports to rf
-rf[rs] <<= r_reg0
-rf[rt] <<= r_reg1
-rf[rd] <<= w_reg
-rf[rd] <<= w_data
+rf[rs] <<= rs
+rf[rt] <<= rt
+rf[rd] <<= rd
 
 # wire write output ports from rf
 data0 <<= rf[rs]
@@ -102,7 +101,7 @@ def alu (a, b, sh, funct):
 
 # Call the above-defined "alu" function and connect its results to the block's output ports 
 alu_out <<= alu(data0, data1, sh, funct)
-w_data <<= alu_out
+rf[rd] <<= alu_out
 
 # simulate processor
 sim_trace = pyrtl.SimulationTrace()

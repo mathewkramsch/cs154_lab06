@@ -52,6 +52,7 @@ alu_out = pyrtl.WireVector(32, 'alu_out')
 rf[rs] <<= r_reg0
 rf[rt] <<= r_reg1
 rf[rd] <<= w_reg
+rf[rd] <<= w_data
 
 # wire write output ports from rf
 data0 <<= rf[rs]
@@ -102,7 +103,6 @@ def alu (a, b, sh, funct):
 # Call the above-defined "alu" function and connect its results to the block's output ports 
 alu_out <<= alu(data0, data1, sh, funct)
 w_data <<= alu_out
-rf[alu_out] <<= w_data
 
 # simulate processor
 sim_trace = pyrtl.SimulationTrace()

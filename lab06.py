@@ -3,22 +3,22 @@
 
 import pyrtl
 
-def alu (a, b, sh, funct):
+def alu (rs, rt, sh, funct):
     """
         Implementation of R-Type operation ALU:
         funct decides operation 
         can do: ADD, SUB, AND, OR, XOR, SLL, SRL, SRA, and SLT
     """
     # Operation 0: a and b
-    ADD = a + b
-    SUB = a - b
-    AND = a & b
-    OR = a | b
-    XOR = a ^ b
-    #SLL = 
-    #SRL = 
-    #SRA = 
-    #SLT = 
+    ADD = rs + rt
+    SUB = rs - rt
+    AND = rs & rt
+    OR = rs | rt
+    XOR = rs ^ rt
+    SLL = pyrtl.shift_left_logical(rt,sh) # shifts use rt, sh = shift amnt
+    SRL = pyrtl.shift_right_logical(rt,sh)
+    SLT = pyrtl.shift_left_arithmetic(rt,sh)
+    SRA = pyrtl.shift_right_arithmetic(rt,sh)
 
     alu_output = pyrtl.WireVector(32)  # output
     
@@ -33,14 +33,14 @@ def alu (a, b, sh, funct):
             alu_output |= OR
         with funct == 0x26:
             alu_output|= XOR
-    #    with funct == 0x00:
-    #        alu_output |= SLL
-    #    with funct == 0x02:
-    #        alu_output |= SRL 
-    #    with funct == 0x03:
-    #        alu_output |= SRA
-    #    with funct == 0x2a:
-    #        alu_output |= SLT
+        with funct == 0x00:
+            alu_output |= SLL
+        with funct == 0x02:
+            alu_output |= SRL 
+        with funct == 0x03:
+            alu_output |= SRA
+        with funct == 0x2a:
+            alu_output |= SLT
 
     return alu_output
 
